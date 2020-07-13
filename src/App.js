@@ -1,16 +1,7 @@
 import React, { useState } from "react";
-import {
-  Packer,
-  Document,
-  Paragraph,
-  TextRun,
-  UnderlineType,
-  AlignmentType,
-  HeadingLevel,
-  RunFonts,
-} from "docx";
-import { saveAs } from "file-saver";
 import "./App.css";
+import { exportToDocx as exportWithDocxjs } from "./utils/docxjs";
+import { exportToDocx as exportWithDocxtemplater } from "./utils/docxtemplater";
 
 function App() {
   const [firstName, setFirstName] = useState("");
@@ -20,89 +11,18 @@ function App() {
   const [state, setState] = useState("New Mexico");
   const [zip, setZip] = useState("");
 
-  const exportToDocx = () => {
-    const doc = new Document();
+  const _exportWithDocxjs = () =>
+    exportWithDocxjs({ firstName, lastName, phoneNumber, city, state, zip });
 
-    doc.addSection({
-      properties: {},
-      children: [
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "First Name",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${firstName}`),
-          ],
-        }),
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Last Name",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${lastName}`),
-          ],
-        }),
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Phone Number",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${phoneNumber}`),
-          ],
-        }),
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "City",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${city}`),
-          ],
-        }),
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "State",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${state}`),
-          ],
-        }),
-        new Paragraph({
-          children: [
-            new TextRun({
-              text: "Zip",
-              bold: true,
-              font: { name: "Calibri" },
-              size: 26,
-            }),
-            new TextRun(`\t${zip}`),
-          ],
-        }),
-      ],
+  const _exportWithDocxtemplater = () =>
+    exportWithDocxtemplater({
+      firstName,
+      lastName,
+      phoneNumber,
+      city,
+      state,
+      zip,
     });
-
-    Packer.toBlob(doc)
-      .then((blob) => {
-        console.log(blob);
-        saveAs(blob, "example.docx");
-        console.log("Document created successfully");
-      })
-      .catch((e) => console.log(e));
-  };
 
   return (
     <>
@@ -232,10 +152,16 @@ function App() {
       </div>
       <div className="container mx-auto flex justify-center mt-16">
         <button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-          onClick={exportToDocx}
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded mr-8"
+          onClick={_exportWithDocxjs}
         >
-          Export to .docx
+          Export with docx.js
+        </button>
+        <button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={_exportWithDocxtemplater}
+        >
+          Export with Docxtemplater
         </button>
       </div>
     </>
